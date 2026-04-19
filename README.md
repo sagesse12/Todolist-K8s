@@ -77,7 +77,7 @@ Les ressources Kubernetes incluent :
 ### 1. Cloner le projet
 
 ```bash
-git clone https://github.com/thessaasagesse/todolist-k8s.git
+git clone https://github.com/sagesse12/todolist-k8s.git
 cd todolist-k8s
 ```
 
