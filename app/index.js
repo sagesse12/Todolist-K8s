@@ -1,8 +1,11 @@
+const path = require('path'); 
 const express = require('express');
 const { Pool } = require('pg');
 
 const app = express();
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'build')));
+
 
 // ─── Connexion PostgreSQL via variables d'environnement ───
 const pool = new Pool({
@@ -93,6 +96,9 @@ app.get('/health', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 app.listen(PORT, async () => {
   console.log(`✓ Serveur démarré sur le port ${PORT}`);
   try {
