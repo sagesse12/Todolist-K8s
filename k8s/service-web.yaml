@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-web
+  namespace: default
+spec:
+  type: NodePort            # Expose l'app sur un port du nœud (accessible de l'extérieur)
+  selector:
+    app: web                # Redirige vers les Pods avec le label app: web
+  ports:
+    - name: http
+      port: 80              # Port du Service (interne)
+      targetPort: 3000      # Port du container NodeJS
+      nodePort: 30080       # Port accessible depuis l'extérieur (30000-32767)
+                            # Laisser vide pour un port aléatoire automatique

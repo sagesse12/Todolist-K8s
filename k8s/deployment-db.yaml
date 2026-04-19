@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+  namespace: default
+  labels:
+    app: postgres
+spec:
+  replicas: 1              # Une seule instance (BDD ne se scale pas horizontalement comme ça)
+  selector:
+    matchLabels:
+      app: postgres        # Sélectionne les Pods avec ce label
+  template:
+    metadata:
+      labels:
+        app: postgres      # Label appliqué au Pod
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15-alpine    # Image officielle PostgreSQL
+          ports:
+            - containerPort: 5432
+
+          # ── Variables depuis ConfigMap ──────────────────
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config
+                  key: POSTGRES_DB
+
+          # ── Variables depuis Secret ─────────────────────
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: POSTGRES_USER
+
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: POSTGRES_PASSWORD
+
+          # ── Volume persistant monté dans le container ───
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data  # Dossier de données PostgreSQL
+
+          # ── Ressources allouées ─────────────────────────
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+
+      # ── Liaison avec le PVC ─────────────────────────────
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc  # Référence le PVC créé à l'étape 6

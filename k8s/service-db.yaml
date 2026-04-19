@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-db         # ← Ce nom = hostname utilisé par l'app web
+  namespace: default
+spec:
+  type: ClusterIP           # Accessible uniquement dans le cluster
+  selector:
+    app: postgres           # Redirige vers les Pods avec ce label
+  ports:
+    - name: postgres
+      port: 5432            # Port exposé par le Service
+      targetPort: 5432      # Port du container PostgreSQL

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc       # Nom du PVC (référencé dans deployment-db)
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce         # Un seul Pod peut lire/écrire à la fois
+  resources:
+    requests:
+      storage: 1Gi          # 1 Go de stockage réservé

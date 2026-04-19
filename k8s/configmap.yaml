@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-config          # Nom du ConfigMap
+  namespace: default
+data:
+  POSTGRES_DB:   "tododb"         # Nom de la base de données
+  DB_HOST:       "service-db"     # Nom du Service Kubernetes de la BDD
+  DB_PORT:       "5432"           # Port PostgreSQL standard
+  DB_NAME:       "tododb"         # Même valeur que POSTGRES_DB
